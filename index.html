@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Video autoplay test</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Fredericka+the+Great" rel="stylesheet">
+    <style>
+        *{margin:0;font-family: 'Fredericka the Great', cursive;}
+        .info-wrap{background: #000;margin-bottom: 30px;color:#fff;padding:10px;overflow:hidden}
+        p{margin:0}
+        .fl{float: left}
+        #qrcode{width:50px;height:50px;float: right;cursor:pointer}
+        #qrcode:hover{width:300px;height:auto;position: absolute;right:10px;transition:500ms all}
+        section{margin-bottom: 5%;width:50%;display: inline-block;text-align: center}
+        .youtube-wrap{width:100%;}
+        #player{width:100%}
+        video{width:90%;max-width:500px}
+    </style>
+</head>
+
+<body>
+    <div class="info-wrap">
+        <div class="fl">
+                <div id="browser-info"></div>
+                <div id="device-vendor"></div>
+                <div id="os-info"></div>
+                <p>modernizr-videoautoplay 說: 你的裝置<span class="modernizr-detect"></span><br></p>
+        </div>
+        <img src="http://chart.apis.google.com/chart?cht=qr&chs=300x300&chl=https%3A//jimmysu15.github.io/video-test/&chld=H|0" id="qrcode">
+    </div>
+
+    <section>
+        autoplay, muted, loop, playsinline<br>
+        <video autoplay muted loop playsinline src="https://rawgit.com/bower-media-samples/big-buck-bunny-480p-30s/master/video.mp4"></video>
+    </section><section>
+        autoplay, muted, loop<br>
+        <video autoplay muted loop src="https://rawgit.com/bower-media-samples/big-buck-bunny-480p-30s/master/video.mp4"></video>
+    </section><section>
+        autoplay, muted, loop, poster<br>
+        <video poster="http://placekitten.com.s3.amazonaws.com/homepage-samples/200/287.jpg" autoplay muted loop src="https://rawgit.com/bower-media-samples/big-buck-bunny-480p-30s/master/video.mp4"></video>
+    </section><section>
+        autoplay, muted, loop, poster, controls<br>
+        <video controls poster="http://placekitten.com.s3.amazonaws.com/homepage-samples/200/287.jpg" autoplay muted loop src="https://rawgit.com/bower-media-samples/big-buck-bunny-480p-30s/master/video.mp4"></video>
+    </section>
+
+    <section class="youtube-wrap">
+        youtube autoplay, muted<br>
+        <div id="player"></div>
+    </section>
+
+
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js'></script>
+    <script src="js/modernizr-autoplay.js"></script>
+    <script src="js/ua-parser.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        $(function(){
+            var player;
+            window.onYouTubeIframeAPIReady = function() {
+                player = new YT.Player('player', {
+                    playerVars: {
+                        'autoplay': 1,
+                        'controls': 0,
+                        'playsinline': 1,
+                        'rel': 0,
+                        'loop': 1,
+                        'modestbranding': 1,
+                        'showinfo': 0,
+                        'wmode': 'transparent'
+                    },
+                    events: {
+                        'onReady': onPlayerReady,
+                    }
+                });
+
+            }
+
+            function onPlayerReady(event) {
+                event.target.loadVideoById("VJlbwQZ2Xgo", 0, "large")
+                event.target.playVideo();
+                event.target.mute();
+            }
+
+        })
+
+        Modernizr.on('videoautoplay', function (result) {
+            if (result) {
+                $('.modernizr-detect').text('支援影片自動播放喔')
+            }
+            else {
+                $('.modernizr-detect').text('不支援影片自動播放喔')
+            }
+        });
+
+
+        $('#browser-info').text($.ua.browser.name +' '+ $.ua.browser.version + '(' + $.ua.engine.name +' '+ $.ua.engine.version + ')');
+        $('#device-vendor').text($.ua.device.vendor);
+        $('#os-info').text($.ua.os.name + ' ' + $.ua.os.version);
+
+        if (/Mobi/.test(navigator.userAgent)){
+            $('#qrcode').hide();
+        }
+    </script>
+</body>
+
+</html>
